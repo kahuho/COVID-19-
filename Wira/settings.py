@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from decouple import config
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -20,10 +22,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '+h!=gigd)gh+hkx%=ya2po)yk#1^vr=!126-njd@_w^pu#@naj'
+SECRET_KEY = config('SECRET_KEY',default='+h!=gigd)gh+hkx%=ya2po)yk#1^vr=!126-njd@_w^pu#@naj')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=True,cast=bool)
 
 ALLOWED_HOSTS = []
 
@@ -76,11 +78,19 @@ WSGI_APPLICATION = 'Wira.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': config('DB_NAME',default='db_name'),  # Or path to database file if using sqlite3.
+        'USER': config('DB_USER',default='user'),  # Not used with sqlite3.
+        'PASSWORD': config('DB_PASSWORD',default='password'),  # Not used with sqlite3.
+        'HOST': config('DB_HOST',default='127.0.0.1'),  # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '5432',  # Set to empty string for default. Not used with sqlite3.
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
